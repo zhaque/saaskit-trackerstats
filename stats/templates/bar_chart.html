@@ -1,0 +1,11 @@
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script>
+google.load('visualization', '1', {packages:['barchart']});
+google.setOnLoadCallback(drawTable);
+function drawTable() {
+  {{ jscode|safe }}
+  var jscode_table = new google.visualization.BarChart(document.getElementById('table_div_jscode'));
+  jscode_table.draw(data, {width: 400, height:300});
+}
+</script>
+<div id="table_div_jscode"></div>
