@@ -157,7 +157,7 @@ def channel(request, channel_id=None):
     
     if channel_id:
         channel_stat = ChannelStatistics.objects.get(id=channel_id)
-        context_vars['cur_tracker'] = channel_stat
+        context_vars['cur_channel'] = channel_stat
 
         jscode = 'var data = new google.visualization.DataTable();\n'
         jscode += 'data.addColumn("number", "%s");\n' % channel_stat
