@@ -13,7 +13,7 @@
   <ul>
 {% for tracker in trend.trackerstats.all %}
     <li>
-    {{ tracker.tracker }}
+    <a href="{% url stats_tracker tracker.id %}">{{ tracker.tracker }}</a>
     {% for stat in tracker.stats.all %}
     <a href="{% url tracker_list_stats_clicked stat.id %}">{{ stat.interval }}</a>
     {% endfor %}
@@ -27,7 +27,7 @@
           <ul>
       {% for channel in pack.channelstats.all %}
             <li>
-            {{ channel.channel }}
+            <a href="{% url stats_channel channel.id %}">{{ channel.channel }}</a>
             {% for stat in channel.stats.all %}
             <a href="{% url tracker_list_stats_clicked stat.id %}">{{ stat.interval }}</a>
             {% endfor %}
@@ -60,10 +60,14 @@
 <p>Most active: {{ cur_stats.most_active_source }}</p>
 {% endif %}
 
-{% include 'pie_chart.html' %}
+{% if cur_trend or cur_tracker or cur_channel%}
 {% include 'bar_chart.html' %}
 {% include 'column_chart.html' %}
 {% include 'line_chart.html' %}
+{% endif %}
+{% if cur_pack %}
+{% include 'pie_chart.html' %}
+{% endif %}
 
 {% if latest %}
 <h3>Latest mentions for {{ cur_stats }}</h3>

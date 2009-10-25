@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.simple import direct_to_template
 from django.http import HttpResponseRedirect
-from tracker.models import Tracker, Trend, Pack, TrendStatistics, TrackerStatistics, PackStatistics, ChannelStatistics, Statistics, ParsedResult
+from tracker.models import Tracker, Trend, Pack, TrendStatistics, TrackerStatistics, PackStatistics, ChannelStatistics, Statistics, ParsedResult, BaseStatistics
 from datetime import datetime, timedelta
 from scratchpad.models import Scratchpad, Item
 import gviz_api
@@ -79,7 +79,7 @@ def trend(request, trend_id=None):
         for tracker_stat in tracker_stats:
           jscode += 'data.addColumn("number", "%s");\n' % tracker_stat
 
-        jscode += 'data.addRows(7);\n'
+        jscode += 'data.addRows(%d);\n' % BaseStatistics.STATS_LENGTH
         i=0
         j=0
         for tracker_stat in tracker_stats:
@@ -90,6 +90,30 @@ def trend(request, trend_id=None):
           j = 0
         context_vars['jscode'] = jscode
 
+    return direct_to_template(request, template='stats.html', extra_context=context_vars)
+
+@login_required
+def tracker(request, tracker_id=None):
+    context_vars = dict()
+    trend_stats = list(TrendStatistics.objects.all())
+    for ts in trend_stats[:]:
+        if ts.trend.muaccount != request.muaccount:
+            trend_stats.remove(ts)    
+    context_vars['trend_stats'] = trend_stats
+    
+    if tracker_id:
+        tracker_stat = TrackerStatistics.objects.get(id=tracker_id)
+        context_vars['cur_tracker'] = tracker_stat
+
+        jscode = 'var data = new google.visualization.DataTable();\n'
+        jscode += 'data.addColumn("number", "%s");\n' % tracker_stat
+
+        jscode += 'data.addRows(%d);\n' % BaseStatistics.STATS_LENGTH
+        j=0
+        for stats in tracker_stat.stats.all():
+          jscode += 'data.setValue(%d, %d, %d);\n' % (j, 0, stats.total_7days)
+          j += 1
+        context_vars['jscode'] = jscode
 
     return direct_to_template(request, template='stats.html', extra_context=context_vars)
 
@@ -120,5 +144,29 @@ def pack(request, pack_id=None):
           i += 1
         context_vars['jscode'] = jscode
 
+
+    return direct_to_template(request, template='stats.html', extra_context=context_vars)
+
+def channel(request, channel_id=None):
+    context_vars = dict()
+    trend_stats = list(TrendStatistics.objects.all())
+    for ts in trend_stats[:]:
+        if ts.trend.muaccount != request.muaccount:
+            trend_stats.remove(ts)    
+    context_vars['trend_stats'] = trend_stats
+    
+    if channel_id:
+        channel_stat = ChannelStatistics.objects.get(id=channel_id)
+        context_vars['cur_tracker'] = channel_stat
+
+        jscode = 'var data = new google.visualization.DataTable();\n'
+        jscode += 'data.addColumn("number", "%s");\n' % channel_stat
+
+        jscode += 'data.addRows(%d);\n' % BaseStatistics.STATS_LENGTH
+        j=0
+        for stats in channel_stat.stats.all():
+          jscode += 'data.setValue(%d, %d, %d);\n' % (j, 0, stats.total_7days)
+          j += 1
+        context_vars['jscode'] = jscode
 
     return direct_to_template(request, template='stats.html', extra_context=context_vars)
