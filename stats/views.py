@@ -3,7 +3,8 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.simple import direct_to_template
 from django.http import HttpResponseRedirect
-from tracker.models import Tracker, Trend, Pack, TrendStatistics, TrackerStatistics, PackStatistics, ChannelStatistics, Statistics, ParsedResult, BaseStatistics
+from tracker.models import Tracker, Trend, Pack, Channel, ParsedResult
+from stats.models import BaseStatistics, Statistics, TrendStatistics, TrackerStatistics, PackStatistics, ChannelStatistics
 from datetime import datetime, timedelta
 from scratchpad.models import Scratchpad, Item
 import gviz_api
