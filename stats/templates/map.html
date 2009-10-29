@@ -6,14 +6,12 @@
     <title>MarkerClusterer Example </title>
     <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key={{ apikey }}&sensor=false" type="text/javascript"></script>
     <script type="text/javascript" src="{% url stats_mentions_json %}"></script>
-    <script type="text/javascript">
-      document.write('<script type="text/javascript" src="../src/markerclusterer' + (document.location.search.indexOf('packed') > -1 ? '_packed' : '') + '.js"><' + '/script>');
-    </script>
+    <script type="text/javascript" src="/media/markerclusterer/js/markerclusterer_packed.js"></script>
     <script type="text/javascript">
       function initialize() {
         if(GBrowserIsCompatible()) {
           var map = new GMap2(document.getElementById('map'));
-          map.setCenter(new GLatLng(39.91, 116.38), 2);
+          map.setCenter(new GLatLng(mentions[0].latitude, mentions[0].longitude), 2);
           map.addControl(new GLargeMapControl());
           var icon = new GIcon(G_DEFAULT_ICON);
           icon.image = "http://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=FFFFFF,008CFF,000000&ext=.png";

@@ -11,6 +11,7 @@ import gviz_api
 import settings
 from django.core import serializers
 from stats.search import SorlSearch
+import simplejson
 
 @login_required
 def index(request, stats_id=None):
@@ -180,12 +181,21 @@ def mentions_json(request):
     api = SorlSearch()
     api.init_options()
     res = api.fetch('django')
-    count = res['sorl']['numFound']
-    res = res['sorl']['docs']
+    total_count = res['sorl']['numFound']
+    print total_count
+    total_res = res['sorl']['docs']
+    res_count = len(total_res)
+    while res_count < total_count:
+	print res_count
+        api.set_offset(res_count)
+        res = api.fetch('django')
+        total_res += res['sorl']['docs']
+        res_count = len(total_res)
 #    json_serializer = serializers.get_serializer("json")()
-#    str = json_serializer.serialize(mentions, ensure_ascii=False)
-    str = 'var mentions = %s' % res
-    return HttpResponse(str, mimetype="txt/json")
+#    str = json_serializer.serialize(res, ensure_ascii=False)
+    str = simplejson.dumps(total_res)
+    str = 'var mentions = %s' % str
+    return HttpResponse(str, mimetype="text/javascript")
 
 def mentions_map(request):
     context_vars = dict()
