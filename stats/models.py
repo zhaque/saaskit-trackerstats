@@ -50,7 +50,9 @@ class BaseStatistics(models.Model):
         return '%s' % (float(today-yesterday)/yesterday*100)
         
     def count_daily_average(self, date):
-        start = self.get_tracker().startdate
+        start = self.get_startdate()
+        if start and start > date:
+            return 0
         delta = (date - start).days + 1
         total = self.count_total_mentions(start, date)
         return total/delta
@@ -102,9 +104,6 @@ class TrendStatistics(BaseStatistics):
             if startdate > date:
                 startdate = date
         return startdate
-
-    def count_daily_average(self, date):
-        return None
 
     def count_total_mentions(self, startdate, finishdate):
         total = 0
