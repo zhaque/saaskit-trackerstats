@@ -2,12 +2,15 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.simple import direct_to_template
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from tracker.models import Tracker, Trend, Pack, Channel, ParsedResult
 from stats.models import BaseStatistics, Statistics, TrendStatistics, TrackerStatistics, PackStatistics, ChannelStatistics
 from datetime import datetime, timedelta
 from scratchpad.models import Scratchpad, Item
 import gviz_api
+import settings
+from django.core import serializers
+from stats.search import SorlSearch
 
 @login_required
 def index(request, stats_id=None):
@@ -171,3 +174,22 @@ def channel(request, channel_id=None):
         context_vars['jscode'] = jscode
 
     return direct_to_template(request, template='stats.html', extra_context=context_vars)
+
+def mentions_json(request):
+#    mentions = ParsedResult.objects.all()
+    api = SorlSearch()
+    api.init_options()
+    res = api.fetch('django')
+    count = res['sorl']['numFound']
+    res = res['sorl']['docs']
+#    json_serializer = serializers.get_serializer("json")()
+#    str = json_serializer.serialize(mentions, ensure_ascii=False)
+    str = 'var mentions = %s' % res
+    return HttpResponse(str, mimetype="txt/json")
+
+def mentions_map(request):
+    context_vars = dict()
+    context_vars['apikey'] = settings.GOOGLEAPI
+    return direct_to_template(request, template='map.html', extra_context=context_vars)
+
+
