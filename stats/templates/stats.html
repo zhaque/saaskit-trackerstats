@@ -65,6 +65,9 @@
 <p>Most active: {{ cur_stats.most_active_source }}</p>
 {% endif %}
 
+{% if cur_tracker %}
+{% include 'table_view.html' %}
+{% endif %}
 {% if cur_trend or cur_tracker or cur_channel%}
 {% include 'bar_chart.html' %}
 {% include 'column_chart.html' %}

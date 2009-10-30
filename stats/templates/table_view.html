@@ -1,0 +1,40 @@
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script>
+google.load('visualization', '1', {packages:['table']});
+google.setOnLoadCallback(drawTable);
+function drawTable() {
+  {{ jscode|safe }}
+  var jscode_table = new google.visualization.Table(document.getElementById('table_div_jscode'));
+  jscode_table.draw(data, {width: 400, height:300});
+  google.visualization.events.addListener(jscode_table, 'select', selectHandler);
+
+  function selectHandler() {
+    var selection = jscode_table.getSelection();
+    var message = '';
+    for (var i = 0; i < selection.length; i++) {
+      var item = selection[i];
+      if (item.row != null && item.column != null) {
+        var str = data.getValue(item.row, item.column);
+        message += '{row:' + item.row + ',column:' + item.column + '} = ' + str + '\n';
+      } else if (item.row != null) {
+        var str = data.getValue(item.row, 0);
+        message += '{row:' + item.row + ', column:none}; value (col 0) = ' + str + '\n';
+      } else if (item.column != null) {
+        var str = data.getValue(0, item.column);
+        message += '{row:none, column:' + item.column + '}; value (row 0) = ' + str + '\n';
+      }
+    }
+    if (message == '') {
+      message = 'nothing';
+    }
+    alert('You selected ' + message);
+    var $jq = jQuery.noConflict();
+    $jq.get('{% url stats_tracker_mentions_js cur_tracker.tracker.id %}', {}, 
+    function(data) {
+      alert("Data Loaded: " + data);
+    }
+    )
+  }
+}
+</script>
+<div id="table_div_jscode"></div>
