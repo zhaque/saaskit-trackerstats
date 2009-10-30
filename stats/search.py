@@ -4,6 +4,7 @@ from livesearch.models import PipeSearch
 #http://yonotes.com:8983/solr/select/?q=django&date:[NOW-7DAY%20TO%20NOW]&sort=date%20desc&version=2.2&start=0&rows=20&indent=on&wt=json
 #createdate:[1995-12-31T23:59:59.999Z TO 2007-03-06T00:00:00Z]
 #http://yonotes.com:8983/solr/select/?q=query:django%20channel:Twitter&version=2.2&start=0&rows=10&indent=on&wt=json
+#http://yonotes.com:8983/solr/select/?q=query:ruby+on+rails&fq=tracker:%22Ruby%22&version=2.2&start=0&rows=40&indent=on&wt=json
 class SorlSearch(PipeSearch):
     uri = 'http://yonotes.com:8983/solr/select/'
 
@@ -15,8 +16,10 @@ class SorlSearch(PipeSearch):
         self.set_offset()
         self.set_sortby()
 
-    def set_query(self, query):
+    def set_query(self, query, filter_query=None):
         self.options.update({'q':query})
+        if filter_query:
+            self.options.update({'fq':filter_query})
 
     def set_format(self, format='json'):
         self.options.update({'wt':format})
@@ -44,6 +47,17 @@ class SorlSearch(PipeSearch):
 
     def set_radius(self, radius):
         self.options.update({'radius':radius})
+
+    def raw_fetch(self, query, filter_query=None, count=None, offset=None, version=None):
+        self.set_query(query, filter_query)
+        if count:
+            self.set_count(count)
+        if offset:
+            self.set_offset(offset)
+        if version:
+            self.set_version(version)
+
+        return self.fetch_with_options(self.options)
 
     def get_result(self, response):
         res = dict()

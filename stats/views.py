@@ -177,19 +177,20 @@ def channel(request, channel_id=None):
 
 def tracker_mentions_js(request, tracker_id):
     tracker = Tracker.objects.get(id=tracker_id)
-    query = 'query:%s tracker:%s' % (tracker.query, tracker.name)
-    return mentions_js(request, query)
+    query = 'query:"%s"' % tracker.query
+    filter_query = 'tracker:"%s"' % tracker.name
+    return mentions_js(request, query, filter_query)
     
-def mentions_js(request, query):
+def mentions_js(request, query, filter_query=None):
     api = SorlSearch()
     api.init_options()
-    res = api.fetch(query)
+    res = api.fetch(query, filter_query)
     total_count = res['sorl']['numFound']
     total_res = res['sorl']['docs']
     res_count = len(total_res)
     while res_count < total_count:
         api.set_offset(res_count)
-        res = api.fetch(query)
+        res = api.fetch(query, filter_query)
         total_res += res['sorl']['docs']
         res_count = len(total_res)
     str = simplejson.dumps(total_res)
