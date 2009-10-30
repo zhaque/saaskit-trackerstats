@@ -182,11 +182,9 @@ def mentions_json(request):
     api.init_options()
     res = api.fetch('django')
     total_count = res['sorl']['numFound']
-    print total_count
     total_res = res['sorl']['docs']
     res_count = len(total_res)
     while res_count < total_count:
-	print res_count
         api.set_offset(res_count)
         res = api.fetch('django')
         total_res += res['sorl']['docs']
