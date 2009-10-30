@@ -9,7 +9,6 @@ from datetime import datetime, timedelta
 from scratchpad.models import Scratchpad, Item
 import gviz_api
 import settings
-from django.core import serializers
 from stats.search import SorlSearch
 import simplejson
 
@@ -176,28 +175,34 @@ def channel(request, channel_id=None):
 
     return direct_to_template(request, template='stats.html', extra_context=context_vars)
 
-def mentions_json(request):
-#    mentions = ParsedResult.objects.all()
+def tracker_mentions_js(request, tracker_id):
+    tracker = Tracker.objects.get(id=tracker_id)
+    query = 'query:%s' % tracker.query
+    return mentions_js(request, query)
+    
+def mentions_js(request, query):
     api = SorlSearch()
     api.init_options()
-    res = api.fetch('django')
+    res = api.fetch(query)
     total_count = res['sorl']['numFound']
     total_res = res['sorl']['docs']
     res_count = len(total_res)
     while res_count < total_count:
         api.set_offset(res_count)
-        res = api.fetch('django')
+        res = api.fetch(query)
         total_res += res['sorl']['docs']
         res_count = len(total_res)
-#    json_serializer = serializers.get_serializer("json")()
-#    str = json_serializer.serialize(res, ensure_ascii=False)
     str = simplejson.dumps(total_res)
     str = 'var mentions = %s' % str
     return HttpResponse(str, mimetype="text/javascript")
 
-def mentions_map(request):
-    context_vars = dict()
-    context_vars['apikey'] = settings.GOOGLEAPI
-    return direct_to_template(request, template='map.html', extra_context=context_vars)
+def tracker_mentions_map(request, tracker_id):
+    tracker = Tracker.objects.get(id=tracker_id)
+    context = {'tracker': tracker}
+    return mentions_map(request, context)
+
+def mentions_map(request, context = {}):
+    context['apikey'] = settings.GOOGLEAPI
+    return direct_to_template(request, template='map.html', extra_context=context)
 
 

@@ -3,6 +3,7 @@ from livesearch.models import PipeSearch
 #http://yonotes.com:8983/solr/select/?q=django&version=2.2&start=0&rows=10&indent=on&wt=json
 #http://yonotes.com:8983/solr/select/?q=django&date:[NOW-7DAY%20TO%20NOW]&sort=date%20desc&version=2.2&start=0&rows=20&indent=on&wt=json
 #createdate:[1995-12-31T23:59:59.999Z TO 2007-03-06T00:00:00Z]
+#http://yonotes.com:8983/solr/select/?q=query:django%20channel:Twitter&version=2.2&start=0&rows=10&indent=on&wt=json
 class SorlSearch(PipeSearch):
     uri = 'http://yonotes.com:8983/solr/select/'
 

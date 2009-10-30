@@ -19,6 +19,7 @@
     {% else %}
     <a href="{% url stats_tracker tracker.id %}">{{ tracker.tracker }}</a>
     {% endifequal %}
+    , See <a href="{% url stats_tracker_mentions_map tracker.tracker.id %}">map</a>
       <ul>
     {% for pack in tracker.packstats.all %}
         <li>
