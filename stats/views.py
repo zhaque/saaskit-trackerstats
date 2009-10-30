@@ -177,7 +177,7 @@ def channel(request, channel_id=None):
 
 def tracker_mentions_js(request, tracker_id):
     tracker = Tracker.objects.get(id=tracker_id)
-    query = 'query:%s' % tracker.query
+    query = 'query:%s tracker:%s' % (tracker.query, tracker.name)
     return mentions_js(request, query)
     
 def mentions_js(request, query):
