@@ -9,5 +9,5 @@ urlpatterns = patterns('',
     url(r'^mentions/js/$', 'stats.views.mentions_js', name='stats_mentions_js'),
     url(r'^mentions/map/$', 'stats.views.mentions_map', name='stats_mentions_map'),
     url(r'^tracker/(?P<tracker_id>\d+)/js/$', 'stats.views.tracker_mentions_js', name='stats_tracker_mentions_js'),
-    url(r'^tracker/(?P<tracker_id>\d+)/map/$', 'stats.views.tracker_mentions_map', name='stats_tracker_mentions_map'),
+#    url(r'^tracker/(?P<tracker_id>\d+)/map/$', 'stats.views.tracker_mentions_map', name='stats_tracker_mentions_map'),
 )

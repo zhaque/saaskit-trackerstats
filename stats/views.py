@@ -118,7 +118,7 @@ def tracker(request, tracker_id=None):
           jscode += 'data.setValue(%d, %d, %d);\n' % (j, 0, stats.total_7days)
           j += 1
         context_vars['jscode'] = jscode
-
+	context_vars['apikey'] = settings.GOOGLEAPI
     return direct_to_template(request, template='stats.html', extra_context=context_vars)
 
 @login_required
@@ -197,13 +197,13 @@ def mentions_js(request, query, filter_query=None):
     str = 'var mentions = %s' % str
     return HttpResponse(str, mimetype="text/javascript")
 
-def tracker_mentions_map(request, tracker_id):
-    tracker = Tracker.objects.get(id=tracker_id)
-    context = {'tracker': tracker}
-    return mentions_map(request, context)
-
-def mentions_map(request, context = {}):
-    context['apikey'] = settings.GOOGLEAPI
-    return direct_to_template(request, template='map.html', extra_context=context)
+#def tracker_mentions_map(request, tracker_id):
+#    tracker = Tracker.objects.get(id=tracker_id)
+#    context = {'tracker': tracker}
+#    return mentions_map(request, context)
+#
+#def mentions_map(request, context = {}):
+#    context['apikey'] = settings.GOOGLEAPI
+#    return direct_to_template(request, template='map.html', extra_context=context)
 
 

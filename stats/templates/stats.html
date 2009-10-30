@@ -19,7 +19,6 @@
     {% else %}
     <a href="{% url stats_tracker tracker.id %}">{{ tracker.tracker }}</a>
     {% endifequal %}
-    , See <a href="{% url stats_tracker_mentions_map tracker.tracker.id %}">map</a>
       <ul>
     {% for pack in tracker.packstats.all %}
         <li>
@@ -67,6 +66,7 @@
 
 {% if cur_tracker %}
 {% include 'table_view.html' %}
+{% include 'map.html' %}
 {% endif %}
 {% if cur_trend or cur_tracker or cur_channel%}
 {% include 'bar_chart.html' %}
