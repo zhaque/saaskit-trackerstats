@@ -5,7 +5,7 @@ install_requires = [
         'Django',
 ]
  
-setup(name="trackerstats",
+setup(name="saaskit-trackerstats",
            version="0.1",
            description="Django application viewing statistics information via Google Visialuzation API",
            author="CrowdSense",
