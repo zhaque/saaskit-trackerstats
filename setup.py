@@ -3,6 +3,14 @@ from setuptools import setup, find_packages
 install_requires = [
         'setuptools',
         'Django',
+        'geopy',
+        'gvis-api',
+]
+
+dependency_links = [
+        'http://pypi.saaskit.org/geopy/',
+        'http://pypi.saaskit.org/gvis-api/',
+        'http://dist.repoze.org',
 ]
  
 setup(name="saaskit-trackerstats",
@@ -16,5 +24,5 @@ setup(name="saaskit-trackerstats",
            entry_points="""
            # -*- Entry points: -*-
            """,
-           dependency_links = ['http://dist.repoze.org',],
+           dependency_links = dependency_links,
 )
